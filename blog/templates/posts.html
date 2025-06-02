@@ -7,14 +7,21 @@
 </head>
 <body>
     <h1>Blog Posts</h1>
-    {% for post in posts %}
     <ul>
+        {% for post in posts %}
         <li>
-            <p>{{post.title}}</p>
-            <p>{{post.content}}</p>
-            <small>Posted on {{ post.created_at}}</small>
+            <p><strong>{{ post.title }}</strong></p>
+            <p>{{ post.content }}</p>
+            <small>Posted on {{ post.created_at }}</small><br>
+
+           
+            <a href="{% url 'edit_post' post.id %}">Edit</a>
+            |
+            <a href="{% url 'delete_post' post.id %}">Delete</a>
         </li>
-        </ul>
-    {% endfor %}
+        {% endfor %}
+    </ul>
+
+    <button><a href="{% url 'add_post'  %}">Create New Post</a></button>
 </body>
 </html>
