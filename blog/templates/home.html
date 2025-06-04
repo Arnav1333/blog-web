@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to My Blog App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            text-align: center;
+            padding-top: 100px;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        a.button {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 1rem;
+            background-color: white;
+            color: #333;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        a.button:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to FreeQuill 📝</h1>
+    <p>Share your thoughts with the world. Start posting today!</p>
+    <a href="{% url 'login' %}" class="button">Log In</a>
+    <a href="{% url 'register' %}" class="button">Register</a>
+</body>
+</html>

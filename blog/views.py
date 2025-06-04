@@ -7,6 +7,11 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+def home(request):
+    if request.user.is_authenticated:
+        return redirect('display_post')
+    return render(request, 'home.html')
+
 @login_required
 def display_post(request):
     posts = Post.objects.all().order_by('-created_at')

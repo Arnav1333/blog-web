@@ -6,14 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Posts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <body>
-    <h1>Blog Posts</h1>
+    <nav class="navbar">
+    <div class="nav-container">
+       <a href="{% url 'display_post' %}" class="nav-logo">
+     FreeQuill
+</a>
 
-    <form method="post" action="{% url 'logout' %}">
+<div class="nav-links">
+    <a href="{% url 'add_post' %}">
+        <i class="fas fa-plus-circle"></i> Create Post
+    </a>
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}" class="logout-form">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </form>
+    {% else %}
+        <a href="{% url 'login' %}">
+            <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+        <a href="{% url 'register' %}">
+            <i class="fas fa-user-plus"></i> Register
+        </a>
+    {% endif %}
+</div>
+
+        </div>
+    </div>
+</nav>
+
+<h1><i class="fas fa-newspaper"></i> Blog Posts</h1>
+
+
+    {% comment %} <form method="post" action="{% url 'logout' %}">
         {% csrf_token %}
         <button type="submit">Logout</button>
-    </form>
+    </form> {% endcomment %}
 
     <ul>
         {% for post in posts %}
@@ -24,14 +58,26 @@
             <p>Created by <strong>{{post.author}}</strong></p>
 
 {% if user.is_authenticated and post.author == user %}
-    <a href="{% url 'edit_post' post.id %}">Edit</a> |
-    <a href="{% url 'delete_post' post.id %}">Delete</a>
+    <div class="post-actions">
+        <a href="{% url 'edit_post' post.id %}">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="{% url 'delete_post' post.id %}">
+            <i class="fas fa-trash-alt"></i> Delete
+        </a>
+    </div>
 {% endif %}
+
 
         </li>
         {% endfor %}
     </ul>
 
-    <button><a href="{% url 'add_post' %}">Create New Post</a></button>
+    <button>
+    <a href="{% url 'add_post' %}">
+        <i class="fas fa-pen"></i> Create New Post
+    </a>
+</button>
+
 </body>
 </html>
