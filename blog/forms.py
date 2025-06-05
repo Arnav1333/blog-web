@@ -1,6 +1,7 @@
 from django import forms
 from .models import Post
 from django.contrib.auth.models import User
+from .models import Comment
 
 class AddPostForm(forms.ModelForm):
     class Meta:
@@ -20,4 +21,12 @@ class UserRegistrationForm(forms.ModelForm):
         if cd['password'] != cd['password2']:
             raise forms.ValidationError('Passwords don\'t match.')
         return cd['password2']
+
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+
         

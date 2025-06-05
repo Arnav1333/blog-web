@@ -1,21 +1,45 @@
-from django.shortcuts import render,redirect,HttpResponse
-from .models import Post
-from .forms import AddPostForm,UserRegistrationForm
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from .models import Post, Comment
+from .forms import AddPostForm, UserRegistrationForm, CommentForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
-
-
-# Create your views here.
 
 def home(request):
     if request.user.is_authenticated:
         return redirect('display_post')
     return render(request, 'home.html')
 
+
 @login_required
 def display_post(request):
     posts = Post.objects.all().order_by('-created_at')
-    return render(request,"posts.html",{"posts":posts})
+
+    if request.method == 'POST':
+
+        # Handle Likes
+        if 'like_post_id' in request.POST:
+            post = get_object_or_404(Post, id=request.POST['like_post_id'])
+            if request.user in post.likes.all():
+                post.likes.remove(request.user)
+            else:
+                post.likes.add(request.user)
+            return redirect('display_post')
+
+        if 'comment_post_id' in request.POST:
+            post = get_object_or_404(Post, id=request.POST['comment_post_id'])
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                new_comment = form.save(commit=False)
+                new_comment.post = post
+                new_comment.user = request.user
+                new_comment.save()
+            return redirect('display_post')
+
+    comment_forms = {post.id: CommentForm() for post in posts}
+
+    return render(request, "posts.html", {"posts": posts, "comment_forms": comment_forms})
+
 
 @login_required
 def add_post(request):
@@ -28,12 +52,14 @@ def add_post(request):
             return redirect('display_post')
     else:
         form = AddPostForm()
-    
+
     return render(request, "add.html", {"form": form})
+
 
 @login_required
 def edit_post(request, id):
-    post = Post.objects.get(id=id)
+    post = get_object_or_404(Post, id=id)
+
     if post.author != request.user:
         return HttpResponse("You are not allowed to edit this post.")
 
@@ -43,19 +69,23 @@ def edit_post(request, id):
             form.save()
             return redirect('display_post')
     else:
-        form = AddPostForm(instance=post)  
+        form = AddPostForm(instance=post)
 
     return render(request, 'edit.html', {"form": form})
 
+
 @login_required
 def delete_post(request, id):
-    post = Post.objects.get(pk=id)
+    post = get_object_or_404(Post, id=id)
+
     if post.author != request.user:
         return HttpResponse("You are not allowed to delete this post.")
+
     if request.method == 'POST':
         post.delete()
         return redirect('display_post')
-    return render(request, 'delete.html', {'post':post})
+
+    return render(request, 'delete.html', {'post': post})
 
 
 def register(request):
@@ -70,4 +100,32 @@ def register(request):
         form = UserRegistrationForm()
     return render(request, 'register.html', {'form': form})
 
-   
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return redirect('post_detail', post_id=post.id)
+
+
+@require_POST
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        new_comment = form.save(commit=False)
+        new_comment.post = post
+        new_comment.user = request.user
+        new_comment.save()
+    return redirect('post_detail', post_id=post.id)
+
+
+@login_required
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    comment_form = CommentForm()
+    return render(request, 'post_detail.html', {'post': post, 'comment_form': comment_form})

@@ -2,78 +2,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <title>Posts</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
-    <nav class="navbar">
+
+<nav class="navbar">
     <div class="nav-container">
-       <a href="{% url 'display_post' %}" class="nav-logo">
-     FreeQuill
-</a>
+        <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill</a>
+        <p>Welcome <strong>{{ user.username }}</strong></p>
 
-<div class="nav-links">
-    <a href="{% url 'add_post' %}">
-        <i class="fas fa-plus-circle"></i> Create Post
-    </a>
-    {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}" class="logout-form">
-            {% csrf_token %}
-            <button type="submit" class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </form>
-    {% else %}
-        <a href="{% url 'login' %}">
-            <i class="fas fa-sign-in-alt"></i> Login
-        </a>
-        <a href="{% url 'register' %}">
-            <i class="fas fa-user-plus"></i> Register
-        </a>
-    {% endif %}
-</div>
-
+        <div class="nav-links">
+            <a href="{% url 'add_post' %}">
+                <i class="fas fa-plus-circle"></i> Create Post
+            </a>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <a href="{% url 'register' %}">
+                <i class="fas fa-user-plus"></i> Register
+            </a>
+            {% endif %}
         </div>
     </div>
 </nav>
 
 <h1><i class="fas fa-newspaper"></i> Blog Posts</h1>
 
+<ul>
+    {% for post in posts %}
+    <li>
+        <p><strong>{{ post.title }}</strong></p>
+        <p>{{ post.content }}</p>
+        <small>Posted on {{ post.created_at }}</small><br />
+        <p>Created by <strong>{{ post.author }}</strong></p>
 
-    {% comment %} <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form> {% endcomment %}
+        <form method="post" style="display:inline;">
+            {% csrf_token %}
+            <input type="hidden" name="like_post_id" value="{{ post.id }}" />
+            <button type="submit" style="border:none; background:none;">
+                <i class="fas fa-heart" style="color: {% if user in post.likes.all %}red{% else %}gray{% endif %};"></i> {{ post.likes.count }}
+            </button>
+        </form>
 
-    <ul>
-        {% for post in posts %}
-        <li>
-            <p><strong>{{ post.title }}</strong></p>
-            <p>{{ post.content }}</p>
-            <small>Posted on {{ post.created_at }}</small><br>
-            <p>Created by <strong>{{post.author}}</strong></p>
+        <p>
+            Liked by:
+            {% with post.likes.all|slice:":2" as top_likes %}
+                {% if top_likes %}
+                    {% for like in top_likes %}
+                        {{ like.username }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    {% if post.likes.count > 2 %}
+                        and {{ post.likes.count|add:"-2" }} others
+                    {% endif %}
+                {% else %}
+                    No likes yet.
+                {% endif %}
+            {% endwith %}
+        </p>
 
-{% if user.is_authenticated and post.author == user %}
-    <div class="post-actions">
-        <a href="{% url 'edit_post' post.id %}">
-            <i class="fas fa-edit"></i> Edit
-        </a>
-        <a href="{% url 'delete_post' post.id %}">
-            <i class="fas fa-trash-alt"></i> Delete
-        </a>
-    </div>
-{% endif %}
+        <p><strong>Top Comments:</strong></p>
+        <ul>
+            {% for comment in post.comments.all|slice:":2" %}
+                <li><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</li>
+            {% empty %}
+                <li>No comments yet.</li>
+            {% endfor %}
+        </ul>
 
+   
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="text" rows="2" placeholder="Add your comment here..." required></textarea>
+            <input type="hidden" name="comment_post_id" value="{{ post.id }}" />
+            <button type="submit">Add Comment</button>
+        </form>
 
-        </li>
-        {% endfor %}
-    </ul>
+        {% if user.is_authenticated and post.author == user %}
+        <div class="post-actions">
+            <a href="{% url 'edit_post' post.id %}">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="{% url 'delete_post' post.id %}">
+                <i class="fas fa-trash-alt"></i> Delete
+            </a>
+        </div>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
 
-    <button>
+<button>
     <a href="{% url 'add_post' %}">
         <i class="fas fa-pen"></i> Create New Post
     </a>
