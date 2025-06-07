@@ -13,7 +13,16 @@
 <nav class="navbar">
     <div class="nav-container">
         <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill</a>
-        <p>Welcome <strong>{{ user.username }}</strong></p>
+<p>
+    Welcome 
+    <strong>
+        <a href="{% url 'user_profile' user.username %}">
+            {{ user.username }}
+        </a>
+    </strong>
+</p>
+
+      
 
         <div class="nav-links">
             <a href="{% url 'add_post' %}">

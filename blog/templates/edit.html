@@ -4,10 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Edit Post</title>
 </head>
 <body>
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill</a>
+<p>
+    Welcome 
+    <strong>
+        <a href="{% url 'user_profile' user.username %}">
+            {{ user.username }}
+        </a>
+    </strong>
+</p>
+
+      
+
+        <div class="nav-links">
+            <a href="{% url 'add_post' %}">
+                <i class="fas fa-plus-circle"></i> Create Post
+            </a>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <a href="{% url 'register' %}">
+                <i class="fas fa-user-plus"></i> Register
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
     <h1>Edit Post</h1>
     <form method="post">
         {% csrf_token %}

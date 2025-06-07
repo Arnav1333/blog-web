@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Document</title>
+     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Profile</title>
 </head>
-<body>
- <nav class="navbar">
+<body>    
+
+    <nav class="navbar">
     <div class="nav-container">
         <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill</a>
 <p>
@@ -45,12 +46,24 @@
         </div>
     </div>
 </nav>
-<h2>Delete Post</h2>
-  <p>Are you sure you want to delete "{{ post.title }}"?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, delete</button>
-    <a href="{% url 'display_post' %}">Cancel</a>
-  </form>
+
+ <h1>Profile of {{ profile_user.username }}</h1>
+<p>Email: {{ profile_user.email }}</p>
+
+
+<h2>Posts by {{ profile_user.username }}</h2>
+
+<ul>
+    {% for post in user_posts %}
+        <li>
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content|truncatewords:30 }}</p>
+            <small>Posted on {{ post.created_at }}</small>
+        </li>
+    {% empty %}
+        <li>This user hasn't posted anything yet.</li>
+    {% endfor %}
+</ul>
+
 </body>
 </html>

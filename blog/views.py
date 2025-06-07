@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .models import Post, Comment
+from .models import Post, Comment,UserProfile
 from .forms import AddPostForm, UserRegistrationForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.contrib.auth.models import User
+
 
 
 def home(request):
@@ -17,7 +19,7 @@ def display_post(request):
 
     if request.method == 'POST':
 
-        # Handle Likes
+        
         if 'like_post_id' in request.POST:
             post = get_object_or_404(Post, id=request.POST['like_post_id'])
             if request.user in post.likes.all():
@@ -95,6 +97,9 @@ def register(request):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
+
+            UserProfile.objects.create(user=new_user)
+
             return render(request, 'registration_done.html', {'new_user': new_user})
     else:
         form = UserRegistrationForm()
@@ -129,3 +134,10 @@ def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     comment_form = CommentForm()
     return render(request, 'post_detail.html', {'post': post, 'comment_form': comment_form})
+
+@login_required
+def profile_view(request, username):
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(UserProfile, user=user)
+    user_posts = Post.objects.filter(author=user).order_by('-created_at')
+    return render(request, 'profile.html', {'profile_user': user, 'profile': profile , 'user_posts': user_posts})
