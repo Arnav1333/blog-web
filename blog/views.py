@@ -13,13 +13,18 @@ def home(request):
     return render(request, 'home.html')
 
 
+
 @login_required
 def display_post(request):
-    posts = Post.objects.all().order_by('-created_at')
+   
+    query = request.GET.get('q')
+    if query:
+        posts = Post.objects.filter(title__icontains=query).order_by('-created_at')
+    else:
+        posts = Post.objects.all().order_by('-created_at')
 
+ 
     if request.method == 'POST':
-
-        
         if 'like_post_id' in request.POST:
             post = get_object_or_404(Post, id=request.POST['like_post_id'])
             if request.user in post.likes.all():
@@ -38,9 +43,15 @@ def display_post(request):
                 new_comment.save()
             return redirect('display_post')
 
+
     comment_forms = {post.id: CommentForm() for post in posts}
 
-    return render(request, "posts.html", {"posts": posts, "comment_forms": comment_forms})
+    return render(request, "posts.html", {
+        "posts": posts,
+        "comment_forms": comment_forms,
+        "query": query  
+    })
+
 
 
 @login_required
@@ -141,3 +152,8 @@ def profile_view(request, username):
     profile = get_object_or_404(UserProfile, user=user)
     user_posts = Post.objects.filter(author=user).order_by('-created_at')
     return render(request, 'profile.html', {'profile_user': user, 'profile': profile , 'user_posts': user_posts})
+
+def search_blogs(request):
+    query = request.GET.get('q')
+    results = Post.objects.filter(title__icontains=query) if query else []
+    return render (request,'search_blogs.html' , {'results': results, 'query': query})

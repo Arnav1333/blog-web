@@ -49,6 +49,12 @@
 
 <h1><i class="fas fa-newspaper"></i> Blog Posts</h1>
 
+<form method="get" action="{% url 'display_post' %}">
+    <input type="text" name="q" placeholder="Search blog by title..." value="{{ query|default_if_none:'' }}">
+    <button type="submit"><i class="fas fa-search"></i> Search</button>
+</form>
+
+
 <ul>
     {% for post in posts %}
     <li>
