@@ -12,7 +12,7 @@
 
 <nav class="navbar">
     <div class="nav-container">
-        <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill</a>
+        <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill <i class="fa-solid fa-feather"></i></a>
 <p>
     Welcome 
     <strong>
@@ -53,6 +53,8 @@
     <input type="text" name="q" placeholder="Search blog by title..." value="{{ query|default_if_none:'' }}">
     <button type="submit"><i class="fas fa-search"></i> Search</button>
 </form>
+
+
 
 
 <ul>
@@ -120,7 +122,13 @@
 
 <button>
     <a href="{% url 'add_post' %}">
-        <i class="fas fa-pen"></i> Create New Post
+      <i class="fa-solid fa-pen"></i>Create New Post
+    </a>
+</button>
+
+<button>
+    <a href="{% url 'search_users' %}">
+        <i class="fa-regular fa-user"></i> Search user
     </a>
 </button>
 

@@ -2,11 +2,14 @@
 <html>
 <head>
     <title>Welcome to My Blog App</title>
-    <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  
+   
+<style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to right, #667eea, #764ba2);
-            color: white;
+            color: #242424;
+            background-color: #ffffff;
             text-align: center;
             padding-top: 100px;
         }
@@ -31,10 +34,14 @@
         a.button:hover {
             background-color: #ddd;
         }
-    </style>
+        .free-quill{
+            color:#1a8917;
+
+        }
+    </style> 
 </head>
 <body>
-    <h1>Welcome to FreeQuill 📝</h1>
+    <h1>Welcome to <span class="free-quill">FreeQuill <i class="fa-solid fa-feather"></i></span> </h1>
     <p>Share your thoughts with the world. Start posting today!</p>
     <a href="{% url 'login' %}" class="button">Log In</a>
     <a href="{% url 'register' %}" class="button">Register</a>

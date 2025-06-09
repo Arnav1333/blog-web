@@ -157,3 +157,9 @@ def search_blogs(request):
     query = request.GET.get('q')
     results = Post.objects.filter(title__icontains=query) if query else []
     return render (request,'search_blogs.html' , {'results': results, 'query': query})
+
+
+def search_users(request):
+    query = request.GET.get('q')
+    results = User.objects.filter(username__icontains=query) if query else []
+    return render(request, 'search_users.html', {'results': results, 'query': query})

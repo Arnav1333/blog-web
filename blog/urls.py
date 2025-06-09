@@ -16,6 +16,8 @@ urlpatterns = [
     path('post/<int:post_id>/comment/', views.add_comment, name='add_comment'),
     path('profile/<str:username>/', views.profile_view, name='user_profile'),
     path('search/blogs/', views.search_blogs, name='search_blogs'),
+    path('search/users/', views.search_users, name='search_users'),
+
 
 
 ]

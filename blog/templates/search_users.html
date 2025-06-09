@@ -1,15 +1,14 @@
-{% load static %}
+{% load static %} 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Add Post</title>
+    <title>Search Users</title>
 </head>
 <body>
-<nav class="navbar">
+ <nav class="navbar">
     <div class="nav-container">
         <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill <i class="fa-solid fa-feather"></i></a>
 <p>
@@ -45,10 +44,18 @@
         </div>
     </div>
 </nav>
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type = "submit">Add Post</button>
-    </form>
+<form method="get" action="{% url 'search_users' %}">
+    <input type="text" name="q" placeholder="Search user by username" value="{{ query }}">
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+    {% for user in results %}
+        <li><a href="{% url 'user_profile' user.username %}">{{ user.username }}</a></li>
+    {% empty %}
+        <li>No users found.</li>
+    {% endfor %}
+</ul>
+
 </body>
 </html>
