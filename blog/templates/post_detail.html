@@ -1,8 +1,62 @@
-<!-- Like button -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Post Detail</title>
+</head>
+<body>
+    <nav class="navbar">
+    <div class="nav-container">
+        <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill <i class="fa-solid fa-feather"></i></a>
+<p>
+    Welcome 
+    <strong>
+        <a href="{% url 'user_profile' user.username %}">
+            {{ user.username }}
+        </a>
+    </strong>
+</p>
+
+      
+
+        <div class="nav-links">
+            <a href="{% url 'add_post' %}">
+                <i class="fas fa-plus-circle"></i> Create Post
+            </a>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <a href="{% url 'register' %}">
+                <i class="fas fa-user-plus"></i> Register
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+
+{% block content %}
+<h2>{{ post.title }}</h2>
+<p>{{ post.content }}</p>
+<small>Posted on {{ post.created_at }} by <strong>{{ post.author }}</strong></small>
+
+
 <form action="{% url 'like_post' post.id %}" method="post">
     {% csrf_token %}
     <button type="submit">
-        {% if has_liked %}
+        {% if user in post.likes.all %}
             ❤️ Unlike
         {% else %}
             🤍 Like
@@ -12,17 +66,39 @@
 </form>
 
 
-<!-- Comment form -->
+<form action="{% url 'save_post' post.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit">
+        {% if user in post.saved_by.all %}
+            <i class="fa-solid fa-bookmark" style="color:blue;"></i> Saved
+        {% else %}
+            <i class="fa-regular fa-bookmark"></i> Save
+        {% endif %}
+    </button>
+</form>
+
+
+
+<h3>Add a comment:</h3>
 <form action="{% url 'add_comment' post.id %}" method="post">
     {% csrf_token %}
-    <textarea name="content" rows="3" placeholder="Write your comment..."></textarea>
+    {{ comment_form.as_p }}
     <button type="submit">Comment</button>
 </form>
 
-<!-- Display comments -->
-<h4>Comments:</h4>
-{% for comment in post.comments.all %}
-    <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
-{% empty %}
-    <p>No comments yet.</p>
-{% endfor %}
+
+        <p><strong>Comments:</strong></p>
+        <ul>
+            {% for comment in post.comments.all %}
+                <li><strong>{{ comment.user.username }}</strong>: {{ comment.text }}</li>
+            {% empty %}
+                <li>No comments yet.</li>
+            {% endfor %}
+        </ul>
+
+
+<a href="{% url 'display_post' %}">← Back to all posts</a>
+{% endblock %}
+
+</body>
+</html>

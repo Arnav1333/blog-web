@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .models import Post, Comment,UserProfile
+from .models import Post, Comment,UserProfile,SavedPost
 from .forms import AddPostForm, UserRegistrationForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
@@ -163,3 +163,15 @@ def search_users(request):
     query = request.GET.get('q')
     results = User.objects.filter(username__icontains=query) if query else []
     return render(request, 'search_users.html', {'results': results, 'query': query})
+
+
+@login_required
+def save_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    SavedPost.objects.get_or_create(user=request.user, post=post)
+    return redirect('post_detail', post_id=post.id)
+
+@login_required
+def saved_posts_list(request):
+    saved_posts = SavedPost.objects.filter(user=request.user).select_related('post')
+    return render(request, 'saved_posts.html', {'saved_posts': saved_posts})

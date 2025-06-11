@@ -17,6 +17,8 @@ urlpatterns = [
     path('profile/<str:username>/', views.profile_view, name='user_profile'),
     path('search/blogs/', views.search_blogs, name='search_blogs'),
     path('search/users/', views.search_users, name='search_users'),
+    path('save-post/<int:post_id>/', views.save_post, name='save_post'),
+    path('saved-posts/', views.saved_posts_list, name='saved_posts'),
 
 
 

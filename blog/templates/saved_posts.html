@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Profile</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Document</title>
 </head>
-<body>    
-
+<body>
     <nav class="navbar">
     <div class="nav-container">
         <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill <i class="fa-solid fa-feather"></i></a>
@@ -46,34 +45,14 @@
         </div>
     </div>
 </nav>
-
-
-
- <img src="{{ user.userprofile.avatar_url }}" alt="avatar" class="avatar" />
- <h1>Profile of {{ profile_user.username }}</h1>
-
-<p>Email: {{ profile_user.email }}</p>
-
-
-<h2>Posts by {{ profile_user.username }}</h2>
-
+    <h2>📚 Your Saved Posts</h2>
 <ul>
-    {% for post in user_posts %}
-        <li>
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.content|truncatewords:30 }}</p>
-            <small>Posted on {{ post.created_at }}</small>
-        </li>
+    {% for saved in saved_posts %}
+        <li><a href="{% url 'post_detail' saved.post.id %}">{{ saved.post.title }}</a></li>
     {% empty %}
-        <li>This user hasn't posted anything yet.</li>
+        <li>No saved posts yet.</li>
     {% endfor %}
 </ul>
-
-<button>
-    <a href="{% url 'saved_posts' %}">
-        <i class="fa-solid fa-bookmark"></i>Saved Posts
-    </a>
-</button>
 
 </body>
 </html>
