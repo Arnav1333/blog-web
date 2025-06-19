@@ -515,7 +515,7 @@ form[method="post"] button[type="submit"] i.fas.fa-heart {
     font-size: 1.2rem;
 }
 
-/* Delete Confirmation */
+
 .delete-container {
     text-align: center;
     padding: 60px 24px;
@@ -567,7 +567,7 @@ form[method="post"] button[type="submit"] i.fas.fa-heart {
     transform: translateY(-1px);
 }
 
-/* Welcome Page */
+
 .welcome-container {
     text-align: center;
     padding: 100px 24px;
@@ -783,6 +783,10 @@ form[method="post"] button[type="submit"] i.fas.fa-heart {
     .container {
         padding: 16px 12px;
     }
+    img {
+        max-width: 100%;
+        height: auto;
+    }
     
     li {
         padding: 20px 16px;
@@ -804,7 +808,7 @@ form[method="post"] button[type="submit"] i.fas.fa-heart {
 
 
 
-/* Animations */
+
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -849,3 +853,20 @@ textarea:focus {
         break-inside: avoid;
     }
 }
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 12px 0;
+    border-radius: 8px;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.post-image {
+    margin: 16px 0;
+    max-width: 600px; 
+    width: 100%;
+}
+

@@ -57,7 +57,8 @@ def display_post(request):
 @login_required
 def add_post(request):
     if request.method == "POST":
-        form = AddPostForm(request.POST)
+     
+        form = AddPostForm(request.POST , request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
@@ -77,7 +78,8 @@ def edit_post(request, id):
         return HttpResponse("You are not allowed to edit this post.")
 
     if request.method == "POST":
-        form = AddPostForm(request.POST, instance=post)
+        form = AddPostForm(request.POST, request.FILES, instance=post)
+
         if form.is_valid():
             form.save()
             return redirect('display_post')

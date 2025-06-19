@@ -6,7 +6,7 @@ from .models import Comment
 class AddPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title','content']
+        fields = ['title','content','image']
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
