@@ -9,20 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
-
 <nav class="navbar">
     <div class="nav-container">
         <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill <i class="fa-solid fa-feather"></i></a>
-<p>
-    Welcome 
-    <strong>
-        <a href="{% url 'user_profile' user.username %}">
-            {{ user.username }}
-        </a>
-    </strong>
-</p>
-
-      
+        <p>Welcome 
+            <strong>
+                <a href="{% url 'user_profile' user.username %}">{{ user.username }}</a>
+            </strong>
+        </p>
 
         <div class="nav-links">
             <a href="{% url 'add_post' %}">
@@ -46,36 +40,60 @@
         </div>
     </div>
 </nav>
+
 <h1><i class="fas fa-newspaper"></i> Blog Posts</h1>
 
-<form method="get" action="{% url 'display_post' %}">
-    <input type="text" name="q" placeholder="Search blog by title..." value="{{ query|default_if_none:'' }}">
-    <button type="submit"><i class="fas fa-search"></i> Search</button>
-</form>
+
+<div class="form-wrapper">
+  
+    <form method="get" action="{% url 'display_post' %}" class="search-form">
+        <input type="text" name="q" placeholder="Search blog by title..." value="{{ query|default_if_none:'' }}">
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
+    </form>
+
+    <form method="get" action="{% url 'display_post' %}" class="filter-form">
+        {% if query %}
+            <input type="hidden" name="q" value="{{ query }}">
+        {% endif %}
+        <select name="author">
+            <option value="">All Authors</option>
+            {% for author in authors %}
+                <option value="{{ author.username }}" {% if author.username == selected_author %}selected{% endif %}>
+                    {{ author.username }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <select name="sort">
+            <option value="latest" {% if selected_sort == "latest" %}selected{% endif %}>Latest</option>
+            <option value="oldest" {% if selected_sort == "oldest" %}selected{% endif %}>Oldest</option>
+        </select>
+
+        <button type="submit"><i class="fas fa-filter"></i> Filter</button>
+    </form>
+</div>
+
 
 <ul>
     {% for post in posts %}
     <li>
-        <p>
-        <strong>
-            <a href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
-        </strong>
-        </p>
+        <p><strong><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></strong></p>
 
         {% if post.image %}
         <div class="post-image">
-        <img src="{{ post.image.url }}" alt="Post image">
+            <img src="{{ post.image.url }}" alt="Post image">
         </div>
-
         {% endif %}
 
-<div class="post-content">
-    {{ post.content|linebreaks }}
-</div>
-<small>Posted on {{ post.created_at }} by {{ post.author }}</small>
-<button onclick="speakText(this)" class="listen-btn" data-content="{{ post.content|striptags|escapejs|safe }}">
-    🔊 Listen
-</button>
+        <div class="post-content">
+            {{ post.content|linebreaks }}
+        </div>
+        <small>Posted on {{ post.created_at }} by {{ post.author }}</small>
+        
+        <button onclick="speakText(this)" class="listen-btn" data-content="{{ post.content|striptags|escapejs|safe }}">
+            <i class="fa-solid fa-volume-high"></i>Listen
+        </button>
+
         <form method="post" style="display:inline;">
             {% csrf_token %}
             <input type="hidden" name="like_post_id" value="{{ post.id }}" />
@@ -98,22 +116,18 @@
                     No likes yet.
                 {% endif %}
             {% endwith %}
-
- <form action="{% url 'save_post' post.id %}" method="post">
-    {% csrf_token %}
-    <button type="submit">
-        {% if user in post.saved_by.all %}
-            <i class="fa-solid fa-bookmark" style="color:blue;"></i> Saved
-        {% else %}
-            <i class="fa-regular fa-bookmark"></i> Save
-        {% endif %}
-    </button>
-</form>
-
-
         </p>
 
-
+        <form action="{% url 'save_post' post.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">
+                {% if user in post.saved_by.all %}
+                    <i class="fa-solid fa-bookmark" style="color:blue;"></i> Saved
+                {% else %}
+                    <i class="fa-regular fa-bookmark"></i> Save
+                {% endif %}
+            </button>
+        </form>
 
         <p><strong>Top Comments:</strong></p>
         <ul>
@@ -124,7 +138,6 @@
             {% endfor %}
         </ul>
 
-   
         <form method="post">
             {% csrf_token %}
             <textarea name="text" rows="2" placeholder="Add your comment here..." required></textarea>
@@ -145,27 +158,11 @@
     </li>
     {% endfor %}
 </ul>
-
-<button>
-    <a href="{% url 'add_post' %}">
-      <i class="fa-solid fa-pen"></i>Create New Post
-    </a>
-</button>
-
-<button>
-    <a href="{% url 'search_users' %}">
-        <i class="fa-regular fa-user"></i> Search user
-    </a>
-</button>
-
-<button>
-    <a href="{% url 'saved_posts' %}">
-        <i class="fa-solid fa-bookmark"></i>Your Saved Posts
-    </a>
-</button>
-
-
+<div class="nav-buttons">
+    <button><a href="{% url 'add_post' %}"><i class="fa-solid fa-pen"></i> Create New Post</a></button>
+    <button><a href="{% url 'search_users' %}"><i class="fa-regular fa-user"></i> Search user</a></button>
+    <button><a href="{% url 'saved_posts' %}"><i class="fa-solid fa-bookmark"></i> Your Saved Posts</a></button>
+</div>
 <script src="{% static 'js/speech.js' %}"></script>
-
 </body>
 </html>

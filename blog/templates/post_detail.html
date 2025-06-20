@@ -64,7 +64,7 @@
 <small>Posted on {{ post.created_at }} by <strong>{{ post.author }}</strong></small>
 <br>
 <button onclick="speakPost()" class="listen-btn">
-  🔊 Listen
+  <i class="fa-solid fa-volume-high"></i>Listen
 </button>
 
 <form action="{% url 'like_post' post.id %}" method="post">

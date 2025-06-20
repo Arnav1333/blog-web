@@ -16,14 +16,24 @@ def home(request):
 
 @login_required
 def display_post(request):
-   
     query = request.GET.get('q')
-    if query:
-        posts = Post.objects.filter(title__icontains=query).order_by('-created_at')
-    else:
-        posts = Post.objects.all().order_by('-created_at')
+    author_username = request.GET.get('author') 
+    sort_order = request.GET.get('sort', 'latest')
 
- 
+    posts = Post.objects.all()  # base queryset
+
+    if query:
+        posts = posts.filter(title__icontains=query)
+
+    if author_username:
+        posts = posts.filter(author__username=author_username)
+
+    if sort_order == 'oldest':
+        posts = posts.order_by('created_at')
+    else:
+        posts = posts.order_by('-created_at')
+
+    # POST request handling
     if request.method == 'POST':
         if 'like_post_id' in request.POST:
             post = get_object_or_404(Post, id=request.POST['like_post_id'])
@@ -43,13 +53,16 @@ def display_post(request):
                 new_comment.save()
             return redirect('display_post')
 
-
     comment_forms = {post.id: CommentForm() for post in posts}
+    authors = User.objects.all()
 
     return render(request, "posts.html", {
         "posts": posts,
         "comment_forms": comment_forms,
-        "query": query  
+        "query": query,
+        "authors": authors,
+        "selected_author": author_username, 
+        "selected_sort": sort_order,
     })
 
 
@@ -66,6 +79,7 @@ def add_post(request):
             return redirect('display_post')
     else:
         form = AddPostForm()
+        
 
     return render(request, "add.html", {"form": form})
 
@@ -177,6 +191,8 @@ def save_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     SavedPost.objects.get_or_create(user=request.user, post=post)
     return redirect('post_detail', post_id=post.id)
+
+
 
 @login_required
 def saved_posts_list(request):
