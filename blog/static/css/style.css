@@ -869,4 +869,17 @@ img {
     max-width: 600px; 
     width: 100%;
 }
+.listen-btn {
+    background: #1a8917;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.listen-btn:hover {
+    background: #156f13;
+}
 

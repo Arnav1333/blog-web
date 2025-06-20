@@ -53,13 +53,19 @@
     <div class="post-image">
     <img src="{{ post.image.url }}" alt="Post image">
 </div>
+{% endif %}
 
-      
-      
-        {% endif %}
-<p>{{ post.content }}</p>
+<div id="post-content">
+    {{ post.content }}
+</div>
+
+
+
 <small>Posted on {{ post.created_at }} by <strong>{{ post.author }}</strong></small>
-
+<br>
+<button onclick="speakPost()" class="listen-btn">
+  🔊 Listen
+</button>
 
 <form action="{% url 'like_post' post.id %}" method="post">
     {% csrf_token %}
@@ -107,6 +113,10 @@
 
 <a href="{% url 'display_post' %}">← Back to all posts</a>
 {% endblock %}
+
+<script src="{% static 'js/speech.js' %}"></script>
+
+
 
 </body>
 </html>
