@@ -70,6 +70,7 @@ def add_post(request):
     return render(request, "add.html", {"form": form})
 
 
+
 @login_required
 def edit_post(request, id):
     post = get_object_or_404(Post, id=id)
@@ -87,6 +88,8 @@ def edit_post(request, id):
         form = AddPostForm(instance=post)
 
     return render(request, 'edit.html', {"form": form})
+
+
 
 
 @login_required
@@ -165,6 +168,8 @@ def search_users(request):
     query = request.GET.get('q')
     results = User.objects.filter(username__icontains=query) if query else []
     return render(request, 'search_users.html', {'results': results, 'query': query})
+
+
 
 
 @login_required

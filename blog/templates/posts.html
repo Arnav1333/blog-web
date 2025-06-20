@@ -46,16 +46,12 @@
         </div>
     </div>
 </nav>
-
 <h1><i class="fas fa-newspaper"></i> Blog Posts</h1>
 
 <form method="get" action="{% url 'display_post' %}">
     <input type="text" name="q" placeholder="Search blog by title..." value="{{ query|default_if_none:'' }}">
     <button type="submit"><i class="fas fa-search"></i> Search</button>
 </form>
-
-
-
 
 <ul>
     {% for post in posts %}
@@ -73,7 +69,6 @@
 
         {% endif %}
 
-
 <div class="post-content">
     {{ post.content|linebreaks }}
 </div>
@@ -81,9 +76,6 @@
 <button onclick="speakText(this)" class="listen-btn" data-content="{{ post.content|striptags|escapejs|safe }}">
     🔊 Listen
 </button>
-
-
-
         <form method="post" style="display:inline;">
             {% csrf_token %}
             <input type="hidden" name="like_post_id" value="{{ post.id }}" />
