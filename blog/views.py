@@ -20,7 +20,7 @@ def display_post(request):
     author_username = request.GET.get('author') 
     sort_order = request.GET.get('sort', 'latest')
 
-    posts = Post.objects.all()  # base queryset
+    posts = Post.objects.all()  
 
     if query:
         posts = posts.filter(title__icontains=query)
@@ -33,7 +33,8 @@ def display_post(request):
     else:
         posts = posts.order_by('-created_at')
 
-    # POST request handling
+    
+    
     if request.method == 'POST':
         if 'like_post_id' in request.POST:
             post = get_object_or_404(Post, id=request.POST['like_post_id'])
