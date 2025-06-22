@@ -67,7 +67,7 @@
   <i class="fa-solid fa-volume-high"></i>Listen
 </button>
 
-<form action="{% url 'like_post' post.id %}" method="post">
+<form action="{% url 'like_post' post.id %}"  method="post">
     {% csrf_token %}
     <button type="submit">
         {% if user in post.likes.all %}
@@ -80,7 +80,7 @@
 </form>
 
 
-<form action="{% url 'save_post' post.id %}" method="post">
+{% comment %} <form action="{% url 'save_post' post.id %}" method="post">
     {% csrf_token %}
     <button type="submit">
         {% if user in post.saved_by.all %}
@@ -89,7 +89,7 @@
             <i class="fa-regular fa-bookmark"></i> Save
         {% endif %}
     </button>
-</form>
+</form> {% endcomment %}
 
 
 

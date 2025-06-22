@@ -9,7 +9,6 @@
     <title>Profile</title>
 </head>
 <body>    
-
     <nav class="navbar">
     <div class="nav-container">
         <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill <i class="fa-solid fa-feather"></i></a>
@@ -21,10 +20,8 @@
         </a>
     </strong>
 </p>
-
       
-
-        <div class="nav-links">
+<div class="nav-links">
             <a href="{% url 'add_post' %}">
                 <i class="fas fa-plus-circle"></i> Create Post
             </a>
@@ -48,16 +45,10 @@
 </nav>
 
 
-
  <img src="{{ profile_user.userprofile.avatar_url }}" alt="avatar" class="avatar" />
 
- <h1>Profile of {{ profile_user.username }}</h1>
-
-<p>Email: {{ profile_user.email }}</p>
-
-
+<h1>Profile of {{ profile_user.username }}</h1>
 <h2>Posts by {{ profile_user.username }}</h2>
-
 <ul>
     {% for post in user_posts %}
         <li>
@@ -72,8 +63,5 @@
         <li>This user hasn't posted anything yet.</li>
     {% endfor %}
 </ul>
-
-
-
 </body>
 </html>

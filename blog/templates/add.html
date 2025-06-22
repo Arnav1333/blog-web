@@ -4,24 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Post</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Add Post</title>
 </head>
 <body>
+
 <nav class="navbar">
     <div class="nav-container">
         <a href="{% url 'display_post' %}" class="nav-logo">FreeQuill <i class="fa-solid fa-feather"></i></a>
-<p>
-    Welcome 
-    <strong>
-        <a href="{% url 'user_profile' user.username %}">
-            {{ user.username }}
-        </a>
-    </strong>
-</p>
-
-      
+        <p>
+            Welcome 
+            <strong>
+                <a href="{% url 'user_profile' user.username %}">
+                    {{ user.username }}
+                </a>
+            </strong>
+        </p>
 
         <div class="nav-links">
             <a href="{% url 'add_post' %}">
@@ -45,10 +44,15 @@
         </div>
     </div>
 </nav>
+
+<div class="container">
+    <h1>Add a New Post</h1>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{form.as_p}}
-        <button type = "submit">Add Post</button>
+        {{ form.as_p }}
+        <button type="submit">Add Post</button>
     </form>
+</div>
+
 </body>
 </html>

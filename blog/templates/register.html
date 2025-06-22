@@ -4,13 +4,16 @@
 <head>
     <title>Register</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+<div class="auth-wrapper">
     <h1>Register</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Register</button>
     </form>
+</div>
 </body>
 </html>
